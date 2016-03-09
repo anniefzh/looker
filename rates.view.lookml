@@ -21,4 +21,16 @@
   - measure: count
     type: count
     drill_fields: [users.userid, users.firstname, users.lastname, users.aliasname]
+  
+  - measure: sum_cost
+    type: sum
+    sql: ${TABLE}.cost
+    drill_fields: [rates.userid, rates.cost]
+    
+  - measure: sum_billrate
+    type: sum
+    sql: ${TABLE}.billrate
+    drill_fields: [rates.userid, rates.billrate]
 
+  
+    
