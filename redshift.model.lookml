@@ -190,3 +190,5 @@
 
 - explore: client_hours
 
+- explore: project_hours
+
