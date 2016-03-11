@@ -1,23 +1,23 @@
-- view: Client_Profits_View
+- view: Projects_Profits_View
 
 # # Specify the table name if it's different from the view name:
-#   sql_table_name: my_schema_name.client_hours
+#   sql_table_name: my_schema_name.project_hours
 #
 # # Or, you could make this view a derived table, like this:
   derived_table:
     sql: |
     
       SELECT 
-        a.clientid as clientid,
-        a.clientname as clientname,
+        a.projectid as projectid,
+        a.projectname as projectname,
         a.date_month as month,
         sum(r.cost * a.sum_hours) as Cost, 
         sum(r.billrate * a.sum_hours) as Revenue
 
       from (
         SELECT 
-          clients.clientid AS "clientid",
-          clients.clientname AS "clientname",
+          projects.projectid AS "projectid",
+          projects.projectname AS "projectname",
           timesheets.userid AS "userid",
           TO_CHAR(CONVERT_TIMEZONE('UTC', 'America/Los_Angeles', tasks.date), 'YYYY-MM') AS "date_month",
           COALESCE(SUM(tasks.hours),0) AS "sum_hours"
@@ -28,8 +28,6 @@
           public.timesheets AS timesheets ON tasks.timesheetid = timesheets.timesheetid
        LEFT JOIN 
           public.projects AS projects ON tasks.projectid = projects.projectid
-       LEFT JOIN 
-          public.clients AS clients ON projects.clientid = clients.clientid
 
        GROUP BY 
           1,2,3,4
@@ -44,13 +42,13 @@
 
   fields:
 # #     Define your dimensions and measures here, like this:
-    - dimension: clientid
+    - dimension: projectid
       type: number
-      sql: ${TABLE}.clientid
+      sql: ${TABLE}.projectid
     
-    - dimension: clientname
+    - dimension: projectname
       type: string
-      sql: ${TABLE}.clientname
+      sql: ${TABLE}.projectname
       
     - dimension: date_month
       type: string
@@ -59,7 +57,9 @@
     - measure: Cost
       type: sum
       sql: ${TABLE}.Cost
+      value_format: '$#,##0.00'
       
     - measure: Revenue
       type: sum
       sql: ${TABLE}.Revenue
+      value_format: '$#,##0.00'

@@ -90,6 +90,6 @@
     type: count
     drill_fields: [taskid, timesheets.qb_timesheet_id, projects.projectid, projects.projectname, projects.managername]
  
-  - measure: sum_hours
+  - measure: Total_hours
     type: sum
     sql: ${TABLE}.hours

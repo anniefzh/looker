@@ -1,23 +1,23 @@
-- view: project_hours
+- view: Client_Profits_View
 
 # # Specify the table name if it's different from the view name:
-#   sql_table_name: my_schema_name.project_hours
+#   sql_table_name: my_schema_name.client_hours
 #
 # # Or, you could make this view a derived table, like this:
   derived_table:
     sql: |
     
       SELECT 
-        a.projectid as projectid,
-        a.projectname as projectname,
+        a.clientid as clientid,
+        a.clientname as clientname,
         a.date_month as month,
-        sum(r.cost * a.sum_hours) as cost, 
-        sum(r.billrate * a.sum_hours) as gain
+        sum(r.cost * a.sum_hours) as Cost, 
+        sum(r.billrate * a.sum_hours) as Revenue
 
       from (
         SELECT 
-          projects.projectid AS "projectid",
-          projects.projectname AS "projectname",
+          clients.clientid AS "clientid",
+          clients.clientname AS "clientname",
           timesheets.userid AS "userid",
           TO_CHAR(CONVERT_TIMEZONE('UTC', 'America/Los_Angeles', tasks.date), 'YYYY-MM') AS "date_month",
           COALESCE(SUM(tasks.hours),0) AS "sum_hours"
@@ -28,6 +28,8 @@
           public.timesheets AS timesheets ON tasks.timesheetid = timesheets.timesheetid
        LEFT JOIN 
           public.projects AS projects ON tasks.projectid = projects.projectid
+       LEFT JOIN 
+          public.clients AS clients ON projects.clientid = clients.clientid
 
        GROUP BY 
           1,2,3,4
@@ -42,22 +44,24 @@
 
   fields:
 # #     Define your dimensions and measures here, like this:
-    - dimension: projectid
+    - dimension: clientid
       type: number
-      sql: ${TABLE}.projectid
+      sql: ${TABLE}.clientid
     
-    - dimension: projectname
+    - dimension: clientname
       type: string
-      sql: ${TABLE}.projectname
+      sql: ${TABLE}.clientname
       
     - dimension: date_month
       type: string
       sql: ${TABLE}.month
     
-    - measure: cost
+    - measure: Cost
       type: sum
-      sql: ${TABLE}.cost
+      sql: ${TABLE}.Cost
+      value_format: '$#,##0.00'
       
-    - measure: gain
+    - measure: Revenue
       type: sum
-      sql: ${TABLE}.gain
+      sql: ${TABLE}.Revenue
+      value_format: '$#,##0.00'

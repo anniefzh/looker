@@ -190,5 +190,5 @@
 
 - explore: Client_Profits_View
 
-- explore: project_hours
+- explore: Projects_Profits_View
 
