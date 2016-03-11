@@ -1,4 +1,4 @@
-- view: client_hours
+- view: Client_Profits_View
 
 # # Specify the table name if it's different from the view name:
 #   sql_table_name: my_schema_name.client_hours
@@ -11,8 +11,8 @@
         a.clientid as clientid,
         a.clientname as clientname,
         a.date_month as month,
-        sum(r.cost * a.sum_hours) as cost, 
-        sum(r.billrate * a.sum_hours) as gain
+        sum(r.cost * a.sum_hours) as Cost, 
+        sum(r.billrate * a.sum_hours) as Revenue
 
       from (
         SELECT 
@@ -56,10 +56,10 @@
       type: string
       sql: ${TABLE}.month
     
-    - measure: cost
+    - measure: Cost
       type: sum
-      sql: ${TABLE}.cost
+      sql: ${TABLE}.Cost
       
-    - measure: gain
+    - measure: Revenue
       type: sum
-      sql: ${TABLE}.gain
+      sql: ${TABLE}.Revenue

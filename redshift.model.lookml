@@ -188,7 +188,7 @@
       sql_on: ${users.roleid} = ${roles.roleid}
       relationship: many_to_one
 
-- explore: client_hours
+- explore: Client_Profits_View
 
 - explore: project_hours
 
